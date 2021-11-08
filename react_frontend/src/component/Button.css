@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet');
+
+.button{
+    margin-top:130px;
+    margin-left:3em;
+    border:10px solid #F3F9F2;
+    height:230px;
+    width:300px;
+    border-radius: 60px;
+    background-color:white;
+    display:"inline-block";
+}
+
+
+.button_font{
+    font-family: Roboto Slab;
+    font-weight: bold;
+    font-size:15px;
+    line-height:10px;
+}
+
+.button_img{
+    padding-left:90px;
+    padding-top:30px
+}
+
+.button_text{
+    padding-top:10px;
+    text-align:center;
+    line-height:10px;
+}
+
+
+/* 앨범가는 버튼 */
+.button2{
+    margin-top:50px;
+    margin-left:3em;
+    border:10px solid #F3F9F2;
+    height:200px;
+    width:300px;
+    border-radius: 60px;
+    background-color:white;
+    display:"inline-block";
+}
+
+
+.button_font2{
+    font-family: Roboto Slab;
+    font-weight: bold;
+    font-size:15px;
+    line-height:10px;
+}
+
+.button_img2{
+    padding-left:90px;
+    padding-top:25px
+}
+
+.button_text2{
+    padding-top:20px;
+    text-align:center;
+    line-height:10px;
+}
