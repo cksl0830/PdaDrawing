@@ -2,9 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet');
 
-Row {
-  margin: 10em;
-}
 
 .Home{
   margin-left:5em;
@@ -80,7 +77,3 @@ margin-left:9em;
   align-items: center;
   color: black;
 }
-
-  .uploadimg{
-    width:60%;
-    }
