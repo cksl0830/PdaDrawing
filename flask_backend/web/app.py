@@ -3,112 +3,152 @@ from flask import Flask, request, send_file, jsonify
 import tensorflow as tf
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-import io
+import io as IO
 import json
+import os
+from skimage import io #이미지로드 
+import cv2  #opencv 사용
 
-########## load model
 
-base_model = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2')
+upload_folder = 'static'
 
-placeholder = tf.keras.layers.Input(shape=(None, None, 3), dtype=tf.float32)
-placeholder_1 = tf.keras.layers.Input(shape=(None, None, 3), dtype=tf.float32)
-net = hub.KerasLayer(base_model, signature='serving_default', signature_outputs_as_dict=True)({'placeholder': placeholder, 'placeholder_1': placeholder_1})
-model = tf.keras.models.Model({'placeholder': placeholder, 'placeholder_1': placeholder_1}, net)
+back_model = tf.keras.models.load_model('modelcombined_04_0.238711.h5')
 
-########## model predict
+def background_removal(imgpath, img):  ##업로드이미지 배경제거 
+    if imgpath:
+        im = io.imread(imgpath)
+    else:
+        im = img.copy()
+
+    im = cv2.resize(im[:,:,0:3], (256,256))
+    img = np.array(im)/255
+    img = img.reshape((1,)+img.shape)
+    pred = back_model.predict(img)
+
+    p = pred.copy()
+    p = p.reshape(p.shape[1:-1])
+
+    p[np.where(p>.25)] = 1
+    p[np.where(p<.25)] = 0
+
+    im[:,:,0] = im[:,:,0]*p 
+    im[:,:,0][np.where(p!=1)] = 255
+    im[:,:,1] = im[:,:,1]*p 
+    im[:,:,1][np.where(p!=1)] = 255
+    im[:,:,2] = im[:,:,2]*p
+    im[:,:,2][np.where(p!=1)] = 255
+
+    return im
+
+def load_img(image_location):  #이미지 로드
+    img = io.imread(image_location)
+    img = cv2.resize(img[:,:,0:3], (256,256), interpolation=cv2.INTER_AREA)
+    return img
+
+def save_img(img,image_name):
+    image_location = os.path.join(upload_folder, image_name)
+    cv2.imwrite(image_location, img)
+    return image_location
+
+def color_quantization(img, k):
+    data = np.float32(img).reshape((-1, 3))
+
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 20, 0.001)
+
+    ret, label, center = cv2.kmeans(data, k, None, criteria, 10, cv2.KMEANS_RANDOM_CENTERS)
+    center = np.uint8(center)
+    result = center[label.flatten()]
+    result = result.reshape(img.shape)
+    return result
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return "Hello World"    
+    return "나의 추억을 LineDraw"    
 
-@app.route('/send_image', methods=['POST', 'GET'])
-def send_image():
-    if request.method == "POST":
-        if request.files.get("myImage") and request.files.get("styleImage") :
-            image = request.files["myImage"].read()
-            image = Image.open(io.BytesIO(image)).convert('RGB')
-            # image.show()
-            width, height = image.size
-            image_numpy = np.array(image)
-            x_test = np.array([image_numpy])
-            x_test = x_test / 255
-            content_image = x_test
+@app.route('/img_trans', methods = ['POST', 'GET'])
+def img_trans():
+    if request.method == 'POST':
+        image_file = request.files['image']
+        if image_file:
+            image_location = os.path.join(upload_folder, image_file.filename)
+            image_file.save(image_location)
 
-            image = request.files["styleImage"].read()
-            image = Image.open(io.BytesIO(image)).convert('RGB')
-            # image.show()
-            image = image.resize((width, height))
-            image_numpy = np.array(image)
-            x_test = np.array([image_numpy])
-            x_test = x_test / 255
-            style_image = x_test
+            new_image = load_img(image_location)
+            new_image_name = 'new_'+image_file.filename+'.jpg'
+            new_image_location = save_img(new_image, new_image_name)
 
-            dict_outut = model.predict({'placeholder': content_image, 'placeholder_1': style_image})
+            back_removed = background_removal(imgpath=new_image_location, img=None)
+            back_removed_name = 'back_removed_'+image_file.filename
+            back_location = save_img(back_removed, back_removed_name)
 
-            y_predict = dict_outut['output_0']
-            numpy_image = y_predict[0]
-            numpy_image = (numpy_image * 255).astype(np.uint8)
-            image = Image.fromarray(numpy_image)
-            bytesIO = io.BytesIO()
-            image.save(bytesIO, 'JPEG', quality=70)
-            bytesIO.seek(0)
-            # image.show() # [DEBUG]
-            
-            return send_file(bytesIO, mimetype='image/jpeg')
+            img = cv2.imread(back_location)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            gray = cv2.medianBlur(gray,5)
+            edges = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 5)
+
+            total_color = 9
+
+            img = color_quantization(img, total_color)
+
+            blurred = cv2.bilateralFilter(img, d=7, sigmaColor=250, sigmaSpace=250)
+            linist = cv2.bitwise_and(blurred, blurred, mask =edges)
+
+            linist_name = 'linist_' + image_file.filename +'.jpg'
+            linist_location = cv2.save_img(linist, linist_name)
+
+            return send_file(linist, mimetype='image/jpeg')
+
         else:
-            return jsonify({"result": "error - failed to get the image"})
+            return jsonify({'Result' : 'Fail'})
+
     else:
-        return "hello world"
+        return '나만의 추억을 LineDrawing'
 
-@app.route('/save_image', methods=['POST', 'GET'])
-def save_image():
-    if request.method == "POST":
-        success = False
-        image_data = request.get_json()
-        author = image_data['author']
-        name = image_data['name']
-        src = image_data['url']
-        date = datetime()
+@app.route('/background', methods = ['POST', 'GET'])
+def background():
+    if request.method == 'POST':
+        if request.files.get('Image') and request.files.get('backImage'):
+            image = request.files['Image'].read()
+            image = Image.open(IO.ByteIO(image)).convert('RGB')
 
-        sql = f"INSERT INTO trans_images (author, name, src, date) VALUES('{author}', '{name}', '{src}', '{date}');"
-        success = conn_db(sql, "insert")
-        return jsonify({"success": success})
+            backImage = request.files['backImage'].read()
+            backImage = Image.open(IO.ByteIO(backImage)).convert('RGB')
+
+            image_location = os.path.join(upload_folder, image.filename)
+            image.save(image_location)
+
+            back_location = os.path.join(upload_folder, backImage.filename)
+            backImage.save(back_location)
+
+            new_image = load_img(image_location)
+            back_image = load_img(back_location)
+
+            mark = np.copy(image)
+
+            blue_threshold = 200
+            green_threshold = 200
+            red_threshold = 200
+            bgr_threshold = [blue_threshold, green_threshold, red_threshold]
+
+            thresholds = (image[:,:,0] < bgr_threshold[0]) | (image[:,:,1] < bgr_threshold[1]) | (image[:,:,2] < bgr_threshold[2])
+            mark[thresholds] = [0,0,0]
+
+            masked = cv2.bitwise_and(img2, mark)
+            masked2 = cv2.bitwise_and(image, 255-mark)
+
+            final = masked+masked2
+
+            final_name = 'back_' + image.filename +'.jpg'
+            linist_location = save_img(final, final_name)
+
+            return send_file(final, mimetype='image/jpeg')
+
+        else:
+            return jsonify({'Result' : 'Fail'})
     else:
-        return "hello world"
-
-@app.route('/get_album', methods=['POST', 'GET'])
-def get_album():
-    if request.method == "GET": 
-        sql = "SELECT id, author, name, src FROM trans_images;"
-        data = conn_db(sql, "select")
-        return json.dumps(data)
-    else:
-        return "hello world"
-
-
-def conn_db(sql, sql_type):
-    import pymysql
-
-    conn = pymysql.connect(host='', user='', password='', db='') # host(=서버주소), user, password, db 적어야함!!
-    curs = conn.cursor(pymysql.cursors.DictCursor)
-    curs.execute(sql)
-    if sql_type == "insert":
-        conn.commit()
-        conn.close()
-        return True
-    elif sql_type == "select":
-        rows = curs.fetchall()
-        conn.close()
-        return rows
-
-    return False
-
-def datetime():
-    import datetime
-    now = datetime.datetime.now()
-    return now.strftime('%Y%m%d%H%M%S')
+        return '나만의 추억을 LineDrawing'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host ='0.0.0.0', debug=True, port ='333')
