@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500&display=swap" rel="stylesheet');
+
+Row {
+  margin: 10em;
+}
+
+.Home{
+  margin-left:5em;
+  margin-right:5em;
+}
+
+.line{
+  display:inline-block;
+  height:10px;
+  background:"green";
+}
+
+.homeimg{
+width:70%;
+margin-left:9em;
+}
+
+.head{
+  text-align: left;
+  margin-top: 1em;
+  margin-left: 3em;
+  margin-bottom: 2em;
+  padding-top: 3em;
+  padding-bottom: 2em;
+  }
+
+.head h1 {
+  /* Line Drawing */
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 43px;
+  align-items: center;
+  padding-left:1.5em;
+  /* line-height: 100%; */  
+}
+
+.head p{
+  /* 해보세요~! */
+  padding-top: 0.5em;
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  align-items: center;
+  padding-left:3em; 
+  /* line-height: 167%; */  
+}
+
+/* transfer button */
+
+.transferbtn {
+  padding-top: 10em;
+  text-align: center;
+  padding-right: 20em;
+  padding-left: 0;
+}
+.transferbtn a {
+  color: black;
+  font-size: 50px;
+  text-decoration: none;
+}
+.transferbtn a:hover {
+   color: #4d4d4d;
+   text-decoration: none;
+}
+.transferbtn p{
+  font-family: Roboto Slab;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 18px;
+  align-items: center;
+  color: black;
+}
+
+  .uploadimg{
+    width:60%;
+    }
