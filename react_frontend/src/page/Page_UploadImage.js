@@ -12,25 +12,16 @@ import InputForm from "../component/InputForm"
 import ReactNotification from 'react-notifications-component';
 import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
-import Navigation from '../component/Nav';
-import './Home.css';
-import { Container, Row, Col } from 'react-bootstrap';
-
 
 
 function Page_UploadImage({ history }) {
   const [myImage, setMyImage] = useState(null);
+  const [styleImage, setStyleImage] = useState(null);
   const [loadingState, setLoadingState] = useState(false);
   const [resultState, setResultState] = useState(null);
   const [formOpen, setFormOpen] = useState(false);
   const [saveState, setSaveState] = useState(false);
   const [goAlbum, setGoAlbum] = useState(false);
-  const linestyle={
-    weight:"1000px",
-    height:"2px",
-    boder:"1px solid black",
-    background:"#CEE5D0",
-    }
 
   const override = css`
     display: block;
@@ -42,6 +33,7 @@ function Page_UploadImage({ history }) {
     // set States as default
     setResultState(null);
     setMyImage(null);
+    setStyleImage(null);
     setLoadingState(false);
     setFormOpen(false);
     setSaveState(false);
@@ -70,13 +62,14 @@ function Page_UploadImage({ history }) {
 
   const clickSubmit = async () => {
     if (resultState == null) { // click 'Transfer' button
-      if (myImage == null) {
+      if (myImage == null || styleImage == null) {
         return message("주의", "사진을 입력해주세요 ~^^*", "danger")
       }
 
       setLoadingState(true);
       const formData = new FormData();
       formData.append("myImage", myImage);
+      formData.append("styleImage", styleImage);
       checkFormData(formData); // [DEBUG] 보낼 데이터를 console에 보여줌
 
       // 이미지 전송
@@ -99,6 +92,7 @@ function Page_UploadImage({ history }) {
       } catch (error) {
         console.log(error);
         setMyImage(null);
+        setStyleImage(null);
         setLoadingState(false);
         setFormOpen(false);
         setSaveState(false);
@@ -111,6 +105,7 @@ function Page_UploadImage({ history }) {
         setLoadingState(false);
         setResultState(response);
         setMyImage(null);
+        setStyleImage(null);
         document.getElementById("submitBtn").innerHTML = "save to album";
       }
     }
@@ -118,24 +113,25 @@ function Page_UploadImage({ history }) {
       setFormOpen(true);
     }
   };
-  
+
 
   return (
-    <div className="Home">
-    <Container fluid>
-    <div>
-    <Navigation/>
-    </div>
-    <div style={linestyle}></div>
+    <NavigationBar history={history} icon={"home"} pageName={"TRANSFER IMAGE"} content={
       <div className="App-container">
         <ReactNotification />
         <div className="ui placeholder segment">
           {!loadingState && !resultState ? (
             // drop-zone
             <div>
+              <div className="ui two column very relaxed stackable grid">
                 <div className="middle aligned column">
-                  <DragDrop setImage={setMyImage} />                  
-                </div>            
+                  <DragDrop setImage={setMyImage} />
+                </div>
+                <div className="middle aligned column">
+                  <DragDrop setImage={setStyleImage} />
+                </div>
+              </div>
+              <div className="ui vertical divider">PLUS</div>
             </div>
           ) : loadingState ? (
             // loading
@@ -153,14 +149,14 @@ function Page_UploadImage({ history }) {
               )}
         </div>
         <div className="btn_transfer">
-          {/* { resultState ? (<button
+          { resultState ? (<button
             className="ui inverted button"
             onClick={clickBack}
             id="backBtn"
             disabled={!resultState}
           >
             Back
-          </button>) : null } */}
+          </button>) : null }
           <button
             className="ui inverted button"
             onClick={clickSubmit}
@@ -173,9 +169,7 @@ function Page_UploadImage({ history }) {
           { goAlbum && history.push("/album") }
         </div>
       </div>
-   
-    </Container>
-    </div>
+    } />
   );
 }
 

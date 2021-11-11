@@ -18,7 +18,9 @@ class Button extends Component{
                         <p className="button_font">(또는 파일 드래그)</p>
                     </div>
                     
-                </div>                
+                </div>
+
+                
 
         )
     }

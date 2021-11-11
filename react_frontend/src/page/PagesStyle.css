@@ -20,7 +20,7 @@
 
 div.btn_transfer {
   margin: 0 auto;
-  width: 10px;
+  width: fit-content;
   margin-top: 30px;
 }
 

@@ -1,9 +1,5 @@
 /* **** DragDrop **** */
 
-.container{
-  width:100px;
-}
-
 .dropzone {
     height: 360px;
     flex: 1;
@@ -12,8 +8,8 @@
     align-items: center;
     padding: 20px;
     border-width: 2px;
-    border-radius: 10px;
-    border-color: #F3F9F2;
+    border-radius: 2px;
+    border-color: #eeeeee;
     border-style: dashed;
     background-color: #fafafa;
     color: #bdbdbd;
