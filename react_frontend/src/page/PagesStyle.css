@@ -29,7 +29,13 @@
 }
 
 div.btn_transfer {
+<<<<<<< HEAD
   text-align:center;  
+=======
+  margin: 0 auto;
+  width: fit-content;
+  margin-top: 30px;
+>>>>>>> 039a4f6ca93a3ea682c782e6716310ea5632f913
 }
 
 .ui.inverted.button  {
