@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import NavigationBar from '../component/NavigationBar'
+import Navigation from '../component/Nav';
 import Gallery from 'react-grid-gallery';
 import axios from "axios";
 import { css } from "@emotion/core";
@@ -10,6 +10,7 @@ import ReactNotification from 'react-notifications-component';
 import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css'
 import './PagesStyle.css'
+import { Container, Row, Col } from 'react-bootstrap';
 
 const TableContainer = styled.div`
 overflow: scroll;
@@ -28,6 +29,12 @@ border: 10px solid white;
 `;
 
 function Page_Album({ history }) {
+  const linestyle={
+    weight:"1000px",
+    height:"2px",
+    boder:"1px solid black",
+    background:"#CEE5D0",
+    }
   const override = css`
         display: block;
         margin: 0 auto;
@@ -116,8 +123,14 @@ function Page_Album({ history }) {
     setTmps(newTemp);
   }
 
-  return (
-    <NavigationBar history={history} icon={"camera"} pageName={"ALBUM"} content={
+return (
+  <div className="Album">
+  <Container fluid>
+  <div>
+  <Navigation/>
+  </div>
+  <div style={linestyle}></div>
+  {
       loadingState ? (
         // loading
         <DotLoader
@@ -137,9 +150,12 @@ function Page_Album({ history }) {
           </TableContainer>
         </div>
       </>)
-    } />
-  )
+    } 
+  </Container>
+  </div>
+);
 }
+
 
 // search bar
 function SearchBar(props) {

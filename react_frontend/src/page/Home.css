@@ -50,8 +50,36 @@ margin-left:9em;
   /* line-height: 167%; */  
 }
 
-/* transfer button */
+.head2{
+  text-align: center;
+  padding-top: 1em;
+  padding-bottom: 2em; 
+  }
 
+  .head2 h1 {
+    /* Line Drawing */
+    font-family: Roboto Slab;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 43px;
+    align-items: center;    
+    /* line-height: 100%; */  
+  }
+  
+  .head2 p{
+    /* 해보세요~! */
+    padding-top: 0.5em;
+    font-family: Roboto Slab;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    align-items: center;
+    padding-left:3em; 
+    /* line-height: 167%; */  
+  }
+
+/* transfer button */
+/* 
 .transferbtn {
   padding-top: 10em;
   text-align: center;
@@ -75,4 +103,4 @@ margin-left:9em;
   line-height: 18px;
   align-items: center;
   color: black;
-}
+} */

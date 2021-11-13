@@ -7,7 +7,6 @@ import DragDrop from "../component/DragDrop";
 import axios from "axios";
 import PropagateLoader from "react-spinners/PropagateLoader";
 import { css } from "@emotion/core";
-import NavigationBar from "../component/NavigationBar"
 import InputForm from "../component/InputForm"
 import ReactNotification from 'react-notifications-component';
 import { store } from 'react-notifications-component';
@@ -121,14 +120,18 @@ function Page_UploadImage({ history }) {
   
 
   return (
-    <div className="Home">
+    <div className="UploadImage">
     <Container fluid>
     <div>
     <Navigation/>
     </div>
     <div style={linestyle}></div>
       <div className="App-container">
-        <ReactNotification />
+        <ReactNotification />  
+        <div className="head2">
+            <h1>LINE DRAWING</h1>
+            <p>이미지 드래그 또는 클릭 후 파일을 업로드하여 라인드로잉을 시작해보세요 !</p>
+          </div>    
         <div className="ui placeholder segment">
           {!loadingState && !resultState ? (
             // drop-zone
@@ -153,21 +156,21 @@ function Page_UploadImage({ history }) {
               )}
         </div>
         <div className="btn_transfer">
-          {/* { resultState ? (<button
+          { resultState ? (<button
             className="ui inverted button"
             onClick={clickBack}
             id="backBtn"
             disabled={!resultState}
           >
-            Back
-          </button>) : null } */}
+            이미지 재선택
+          </button>) : null }
           <button
             className="ui inverted button"
             onClick={clickSubmit}
             id="submitBtn"
             disabled={saveState || loadingState}
           >
-            Transfer
+            Start Line Drawing
           </button>
           <InputForm open={formOpen} setOpen={setFormOpen} url={resultState} saveState={saveState} setSaveState={setSaveState} setGoAlbum={setGoAlbum}/>
           { goAlbum && history.push("/album") }
