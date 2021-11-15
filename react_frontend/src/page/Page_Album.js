@@ -4,7 +4,7 @@ import Gallery from 'react-grid-gallery';
 import axios from "axios";
 import { css } from "@emotion/core";
 import DotLoader from "react-spinners/DotLoader";
-import "semantic-ui-css/semantic.min.css";
+// import "semantic-ui-css/semantic.min.css";   //css다운받아씀 ui.input여기
 import styled from "styled-components";
 import ReactNotification from 'react-notifications-component';
 import { store } from 'react-notifications-component';
