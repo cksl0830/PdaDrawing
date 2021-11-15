@@ -1,4 +1,3 @@
-import tensorflow_hub as hub
 from flask import Flask, request, send_file, jsonify
 import tensorflow as tf
 from PIL import Image, ImageDraw, ImageFont
@@ -69,8 +68,8 @@ def index():
 
 @app.route('/img_trans', methods = ['POST', 'GET'])
 def img_trans():
-    if request.method == 'POST':
-        image_file = request.files['image']
+    if request.method == "POST":
+        image_file = request.files['myImage']
         if image_file:
             image_location = os.path.join(upload_folder, image_file.filename)
             image_file.save(image_location)
@@ -104,13 +103,13 @@ def img_trans():
             return jsonify({'Result' : 'Fail'})
 
     else:
-        return '나만의 추억을 LineDrawing'
+        return '나의 추억을 LineDraw'
 
 @app.route('/background', methods = ['POST', 'GET'])
 def background():
     if request.method == 'POST':
-        if request.files.get('Image') and request.files.get('backImage'):
-            image = request.files['Image'].read()
+        if request.files.get('myImage') and request.files.get('backImage'):
+            image = request.files['myImage'].read()
             image = Image.open(IO.ByteIO(image)).convert('RGB')
 
             backImage = request.files['backImage'].read()
@@ -148,7 +147,7 @@ def background():
         else:
             return jsonify({'Result' : 'Fail'})
     else:
-        return '나만의 추억을 LineDrawing'
+        return '나의 추억을 LineDraw'
 
 if __name__ == '__main__':
     app.run(host ='0.0.0.0', debug=True, port ='333')
