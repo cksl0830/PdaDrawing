@@ -20,6 +20,11 @@
 
 /**** Page_UploadImage ****/
 
+.UploadImage{
+  margin-left:5em;
+  margin-right:5em;
+}
+
 .ui.placeholder.segment {
   text-align:center;
   margin:auto;
@@ -33,7 +38,7 @@ div.btn_transfer {
 }
 
 .ui.inverted.button  {
-  margin-top: 10px;
+  margin-top: 40px;
   width:300px;
   height:100px;
   font-size: 19px;
@@ -69,12 +74,15 @@ div.product {
 
 
 /**** Page_Album ****/
+.Album{
+  margin-left:5em;
+  margin-right:5em;
+}
+
 .search {
   width:100%;
   text-align: center;
 }
-
-
 
 .tablecontainer {
   height:100%;
@@ -86,4 +94,25 @@ div.product {
 .tablecontainer span {
   background-color: #111111a6 !important;
   color: #ffffff !important;
+}
+
+.ui.input{
+  width:100%;
+  height:50px;
+}
+
+.ui.button{
+  width:200px;
+  height:50px;
+  background-color:#fff8f0;
+  border:2px solid #fdf0de;
+}
+
+.ui.button:hover{
+  background-color:#fdf0de;
+}
+
+.searchDiv{
+  margin-bottom:40px;
+  padding:10px;
 }

@@ -4,7 +4,7 @@ import Gallery from 'react-grid-gallery';
 import axios from "axios";
 import { css } from "@emotion/core";
 import DotLoader from "react-spinners/DotLoader";
-// import "semantic-ui-css/semantic.min.css";   //css다운받아씀 ui.input여기
+import "semantic-ui-css/semantic.min.css";  
 import styled from "styled-components";
 import ReactNotification from 'react-notifications-component';
 import { store } from 'react-notifications-component';
@@ -141,7 +141,7 @@ return (
         />
       ) : (<>
         <div className="Album-App-container">
-          <div className="search">
+          <div className="searchDiv">
             <ReactNotification />
             <SearchBar ss={ss} onUserInput={handleUserInput} />
           </div>
@@ -166,7 +166,7 @@ function SearchBar(props) {
   return (
     <div class="ui action input">
         <input type={"text"} size={"25"}
-            className={"input-sm"} placeholder={"Enter a user or image name.."}
+            className={"input-sm"} placeholder={"라인드로잉 이미지 검색하기"}
             onChange={onChange} value={props.ss} />
         <button class="ui icon button">
             <i class="search icon"></i>
